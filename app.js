@@ -13,7 +13,7 @@ var AppComponent = ng
     .Class({
         constructor: function () {
             this.thing = (function action(){
-                return account.instance('bitter-bush-5094').class('file').dataobject().list()
+                return account.instance('INSTANCE').class('file').dataobject().list()
                     .then(function(res){
                         console.log(res);
                         items = toArray(res);
@@ -29,7 +29,7 @@ var AppComponent = ng
     });
 
 // Global Variables
-var account = new Syncano({accountKey: "239c4fce89830a70229b598f03dbc61e91409bac"});
+var account = new Syncano({accountKey: "ACCT_KEY"});
 
 // Content Component
 function DisplayComponent() {
@@ -51,7 +51,7 @@ DisplayComponent.annotations = [
 ];
 
 function itemList() {
-    return account.instance('bitter-bush-5094').class('file').dataobject().list()
+    return account.instance('INSTANCE').class('file').dataobject().list()
         .then(function(res){
             console.log(res);
             items = toArray(res);
