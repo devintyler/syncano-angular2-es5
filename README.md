@@ -7,3 +7,5 @@ Current Docs:
 [thoughtram Blog DI](http://blog.thoughtram.io/angular/2015/05/18/dependency-injection-in-angular-2.html)
 
 [thoughtram Blog Forward](http://blog.thoughtram.io/angular/2015/09/03/forward-references-in-angular-2.html)
+
+[Ionic Blog](http://blog.ionic.io/angular-2-series-components/)
