@@ -1,0 +1,23 @@
+{
+  "name": "syncano-angular2-es5",
+  "version": "1.0.0",
+  "description": "Syncano, Angular 2, and ES5",
+  "main": "app.js",
+  "dependencies": {
+    "syncano": "^0.2.6"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/devintyler/syncano-angular2-es5.git"
+  },
+  "author": "Devin Visslailli",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/devintyler/syncano-angular2-es5/issues"
+  },
+  "homepage": "https://github.com/devintyler/syncano-angular2-es5"
+}
