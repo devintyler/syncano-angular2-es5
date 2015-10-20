@@ -3,13 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <title></title>
-    <script src="https://code.angularjs.org/2.0.0-alpha.34/angular2.sfx.dev.js"></script>
+    <script src="https://code.angularjs.org/2.0.0-alpha.44/angular2.sfx.dev.js"></script>
     <script src="bower_components/bluebird/js/browser/bluebird.min.js"></script>
     <script src="bower_components/lodash/lodash.min.js"></script>
     <script src="bower_components/syncano/dist/syncano.min.js"></script>
-    <script src="app.js"></script>
+    <script src="main.js"></script>
 </head>
 <body>
-    <my-app [model]="myItems"></my-app>
+    <my-app></my-app>
+
+    <!--ng-for example-->
+    <!--<p>My name: {{ myName }}</p>-->
+    <!--<p>Friends:</p>-->
+    <!--<ul>-->
+    <!--<li *ng-for="#name of names">-->
+    <!--{{ name }}-->
+    <!--</li>-->
+    <!--<a onclick="hello()">Click</a>-->
+    <!--</ul>-->
+
+    <!--ng-if example-->
+    <!--<p *ng-if="names.length > 3">You have too many friends...</p>-->
 </body>
 </html>
