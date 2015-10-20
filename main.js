@@ -17,7 +17,7 @@ var AppComponent = ng
 
         },
 
-        afterContentInit: function(){
+        afterContentLoaded: function(){
 
         }
 
@@ -28,8 +28,7 @@ function Test() {
     // Declare Variables
     var self = this;
     this.list = [];
-    this.update = new ng.EventEmitter();
-    this.thing = "";
+    //this.update = new ng.EventEmitter();
 
     // Load API
     var apiReq = new XMLHttpRequest();
@@ -66,8 +65,8 @@ function Test() {
 Test.annotations = [
     new ng.Component({
         selector: "test",
-        changeDetection: "ON_PUSH",
-        events: ["update"]
+        changeDetection: "ON_PUSH"
+        //events: ["update"]
     }),
     new ng.View({
         template:
@@ -77,9 +76,7 @@ Test.annotations = [
             '</li>' +
             '</ul>' +
             '<input id="textEntry" (focus)="contentLoaded()" #textbox (keyup)="doneTyping($event)">' +
-            '<button (click)="addTodo(textbox.value)">Add Todo</button><br>' +
-            '<small>Start typing to see list.</small>' +
-            '<p>{{thing}}</p>',
+            '<button (click)="addTodo(textbox.value)">Add Todo</button><br>',
         directives: [ng.NgFor, ng.NgIf]
     })
 ];
