@@ -5,7 +5,6 @@ var syncanoService = require('./syncano-service.js');
 var AppComponent = ng
     .Component({
         selector: 'my-app',
-        changeDetection: 'ON_PUSH',
         services: [syncanoService]
     })
     .View({
@@ -16,6 +15,10 @@ var AppComponent = ng
     .Class({
         constructor: function () {
 
+        },
+
+        afterContentInit: function(){
+
         }
 
     });
@@ -23,8 +26,10 @@ var AppComponent = ng
 // SYNCANO COMPONENT
 function Test() {
     // Declare Variables
-    this.list = [];
     var self = this;
+    this.list = [];
+    this.update = new ng.EventEmitter();
+    this.thing = "";
 
     // Load API
     var apiReq = new XMLHttpRequest();
@@ -40,9 +45,13 @@ function Test() {
                 for(i = 0; i < res.objects.length; i++){
                     self.list.push(res.objects[i].id);
                 }
+                document.getElementById('textEntry').focus();
             });
     }
 
+    this.contentLoaded = function(){
+        console.log('Content Loaded.');
+    };
     this.addTodo = function(todo) {
         this.list.push(todo);
     };
@@ -56,7 +65,9 @@ function Test() {
 
 Test.annotations = [
     new ng.Component({
-        selector: "test"
+        selector: "test",
+        changeDetection: "ON_PUSH",
+        events: ["update"]
     }),
     new ng.View({
         template:
@@ -65,9 +76,10 @@ Test.annotations = [
             '{{ item }}' +
             '</li>' +
             '</ul>' +
-            '<input id="textEntry" #textbox (keyup)="doneTyping($event)">' +
+            '<input id="textEntry" (focus)="contentLoaded()" #textbox (keyup)="doneTyping($event)">' +
             '<button (click)="addTodo(textbox.value)">Add Todo</button><br>' +
-            '<small>Start typing to see list.</small>',
+            '<small>Start typing to see list.</small>' +
+            '<p>{{thing}}</p>',
         directives: [ng.NgFor, ng.NgIf]
     })
 ];

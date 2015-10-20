@@ -19,3 +19,5 @@ Current Docs:
 [thoughtram Blog Forward](http://blog.thoughtram.io/angular/2015/09/03/forward-references-in-angular-2.html)
 
 [Ionic Blog](http://blog.ionic.io/angular-2-series-components/)
+
+[EventEmitters](http://stackoverflow.com/questions/32295635/change-detection-in-angular-2-0)
