@@ -9,64 +9,68 @@ var AppComponent = ng
     })
     .View({
         template:'<h1>Syncano in Angular 2 (ES5)</h1>' +
-        '<test></test>',
-        directives: [Test, ng.NgFor, ng.NgIf]
+        '<syncano-component></syncano-component>',
+        directives: [SyncanoComponent, ng.NgFor, ng.NgIf]
     })
     .Class({
         constructor: function () {
-
+            // App component constructor
         },
 
         afterContentLoaded: function(){
-
+            // functions for after component content loads
         }
 
     });
 
-// SYNCANO COMPONENT
-function Test() {
+// Syncano Component
+function SyncanoComponent() {
     // Declare Variables
     var self = this;
     this.list = [];
-    //this.update = new ng.EventEmitter();
 
-    // Load API
+    // Load API Keys -  use this method so your API isn't directly
+    //                  in the code; *** not securely encoded ***
     var apiReq = new XMLHttpRequest();
     apiReq.addEventListener("load", reqListener);
-    apiReq.open("GET", "APIKey.JSON");
+    apiReq.open("GET", "APIKey.JSON"); // second argument is your API key (text file or JSON)
     apiReq.send();
     function reqListener(e){
-        syncanoService.LoadAPI(JSON.parse(this.responseText));
-
-        // Get List Items
-        syncanoService.getData()
-            .then(function(res){
-                for(i = 0; i < res.objects.length; i++){
-                    self.list.push(res.objects[i].id);
-                }
-                document.getElementById('textEntry').focus();
-            });
+        syncanoService.loadAPI(this.responseText); // loads api into App Object
+        self.getInitialData(); // local function getting/setting initial data
     }
 
-    this.contentLoaded = function(){
-        console.log('Content Loaded.');
+    this.getInitialData = function(){ // gets initial set of data using Syncano Service
+        syncanoService.getData() // Get List Items
+            .then(function(res){
+                for(i = 0; i < res.objects.length; i++){ // loads each item one by one to list
+                    self.list.push(res.objects[i].id);
+                }
+                document.getElementById('textEntry').focus(); // temporary async fix
+            });
     };
-    this.addTodo = function(todo) {
-        this.list.push(todo);
+    this.contentLoaded = function(){ // Temporary fix for async data binding (page load)
+        // nothing goes here
     };
-    this.doneTyping = function($event) {
-        if($event.which === 13) {
-            this.addTodo($event.target.value);
+    this.addItem = function(item) { // add item to list
+        this.list.push(item);
+    };
+    this.doneTyping = function($event) { // watches for keys when done typing
+        if($event.which === 13) { // 'enter' key
+            this.addItem($event.target.value);
             $event.target.value = null;
         }
     };
+    this.clearBox = function(){
+        document.getElementById('textEntry').value = null; // clears box after clicking 'Add'
+        document.getElementById('textEntry').focus(); // resets focus
+    };
 }
 
-Test.annotations = [
+SyncanoComponent.annotations = [
     new ng.Component({
-        selector: "test",
+        selector: "syncano-component",
         changeDetection: "ON_PUSH"
-        //events: ["update"]
     }),
     new ng.View({
         template:
@@ -76,7 +80,7 @@ Test.annotations = [
             '</li>' +
             '</ul>' +
             '<input id="textEntry" (focus)="contentLoaded()" #textbox (keyup)="doneTyping($event)">' +
-            '<button (click)="addTodo(textbox.value)">Add Todo</button><br>',
+            '<button (click)="addItem(textbox.value);clearBox()">Add Item</button><br>',
         directives: [ng.NgFor, ng.NgIf]
     })
 ];
@@ -95,12 +99,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     SyncanoService.prototype = {
 
-        LoadAPI: function(apiObj){
+        loadAPI: function(apiObj){ // loads API into App Object
             this.apiObj = this.checkJSON(apiObj);
-            return this.apiObj;
         },
 
-        toArray: function(obj){
+        toArray: function(obj){ // Puts items into an array
             var listItems = [];
             for (var i = 0; i < obj.objects.length; i++){
                 listItems[i] = ' ' + obj.objects[i].id;
@@ -108,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return listItems;
         },
 
-        checkJSON: function(obj){
+        checkJSON: function(obj){ // checks if API is a JSON
             var parsedObj;
             try {
                 parsedObj = JSON.parse(obj);
@@ -118,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return parsedObj;
         },
 
-        getData: function(){
+        getData: function(){ // Gets Data from Syncano
             var account = new Syncano({accountKey: this.apiObj.AccountKey});
 
             return account.instance(this.apiObj.Instance).class(this.apiObj.Class).dataobject().list()
@@ -128,12 +131,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 })
                 .catch(function(err){
                     console.log(err);
-                })
+                });
         }
 
     };
 
-    module.exports = new SyncanoService;
+    module.exports = new SyncanoService; // for Browserify
 
 })();
 },{}]},{},[1]);

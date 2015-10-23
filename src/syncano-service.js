@@ -6,12 +6,11 @@
 
     SyncanoService.prototype = {
 
-        LoadAPI: function(apiObj){
+        loadAPI: function(apiObj){ // loads API into App Object
             this.apiObj = this.checkJSON(apiObj);
-            return this.apiObj;
         },
 
-        toArray: function(obj){
+        toArray: function(obj){ // Puts items into an array
             var listItems = [];
             for (var i = 0; i < obj.objects.length; i++){
                 listItems[i] = ' ' + obj.objects[i].id;
@@ -19,7 +18,7 @@
             return listItems;
         },
 
-        checkJSON: function(obj){
+        checkJSON: function(obj){ // checks if API is a JSON
             var parsedObj;
             try {
                 parsedObj = JSON.parse(obj);
@@ -29,7 +28,7 @@
             return parsedObj;
         },
 
-        getData: function(){
+        getData: function(){ // Gets Data from Syncano
             var account = new Syncano({accountKey: this.apiObj.AccountKey});
 
             return account.instance(this.apiObj.Instance).class(this.apiObj.Class).dataobject().list()
@@ -39,11 +38,11 @@
                 })
                 .catch(function(err){
                     console.log(err);
-                })
+                });
         }
 
     };
 
-    module.exports = new SyncanoService;
+    module.exports = new SyncanoService; // for Browserify
 
 })();
