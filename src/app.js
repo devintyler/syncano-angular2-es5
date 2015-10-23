@@ -15,7 +15,6 @@ var AppComponent = ng
         constructor: function () {
             // App component constructor
         },
-
         afterContentLoaded: function(){
             // functions for after component content loads
         }
@@ -28,16 +27,18 @@ function SyncanoComponent() {
     var self = this;
     this.list = [];
 
+    //syncanoService.getList().then(function(res){self.list.push(res)});
+
     // Load API Keys -  use this method so your API isn't directly
     //                  in the code; *** not securely encoded ***
-    var apiReq = new XMLHttpRequest();
-    apiReq.addEventListener("load", reqListener);
-    apiReq.open("GET", "APIKey.JSON"); // second argument is your API key (text file or JSON)
-    apiReq.send();
-    function reqListener(e){
-        syncanoService.loadAPI(this.responseText); // loads api into App Object
+    fetch("APIKey.JSON").then(function(response) {
+        return response.json();
+    }).then(function(data) {
+        syncanoService.loadAPI(data); // loads api into App Object
         self.getInitialData(); // local function getting/setting initial data
-    }
+    }).catch(function() {
+        console.log("Couldn't fetch API.");
+    });
 
     this.getInitialData = function(){ // gets initial set of data using Syncano Service
         syncanoService.getData() // Get List Items
@@ -48,11 +49,18 @@ function SyncanoComponent() {
                 document.getElementById('textEntry').focus(); // temporary async fix
             });
     };
-    this.contentLoaded = function(){ // Temporary fix for async data binding (page load)
-        // nothing goes here
-    };
     this.addItem = function(item) { // add item to list
-        this.list.push(item);
+        syncanoService.setData(item) // pushes item to Syncano
+            .then(function(res){ // if successfull...
+                self.addItemToList(res.title);
+                self.triggerDigest();
+            })
+            .catch(function(err){
+                console.log(err);
+            });
+    };
+    this.addItemToList = function(itemTitle){
+        self.list.push(itemTitle);
     };
     this.doneTyping = function($event) { // watches for keys when done typing
         if($event.which === 13) { // 'enter' key
@@ -63,6 +71,13 @@ function SyncanoComponent() {
     this.clearBox = function(){
         document.getElementById('textEntry').value = null; // clears box after clicking 'Add'
         document.getElementById('textEntry').focus(); // resets focus
+    };
+    this.triggerDigest = function(){
+        document.getElementById('submitButton').focus(); // async workaround
+        document.getElementById('textEntry').focus(); // resets focus
+    };
+    this.contentLoaded = function(){ // Temporary fix for async data binding (page load)
+        // nothing goes here
     };
 }
 
@@ -79,7 +94,7 @@ SyncanoComponent.annotations = [
             '</li>' +
             '</ul>' +
             '<input id="textEntry" (focus)="contentLoaded()" #textbox (keyup)="doneTyping($event)">' +
-            '<button (click)="addItem(textbox.value);clearBox()">Add Item</button><br>',
+            '<button id="submitButton" (click)="addItem(textbox.value);clearBox()">Add Item</button>',
         directives: [ng.NgFor, ng.NgIf]
     })
 ];

@@ -29,16 +29,35 @@
         },
 
         getData: function(){ // Gets Data from Syncano
-            var account = new Syncano({accountKey: this.apiObj.AccountKey});
+            var self = this;
+            this.account = new Syncano({accountKey: this.apiObj.AccountKey});
 
-            return account.instance(this.apiObj.Instance).class(this.apiObj.Class).dataobject().list()
+            return this.account.instance(self.apiObj.Instance).class(self.apiObj.Class).dataobject().list()
                 .then(function(res){
-                    //console.log(res);
                     return res;
                 })
                 .catch(function(err){
                     console.log(err);
                 });
+        },
+
+        setData: function(item){ // Sends new Item to Syncano (item is just a string)
+            var account = new Syncano({accountKey: this.apiObj.AccountKey});
+            var itemObj = {
+                "title":item
+            };
+
+            return account.instance(this.apiObj.Instance).class(this.apiObj.Class).dataobject().add(itemObj)
+                .then(function(res){
+                    return res;
+                })
+                .catch(function(err){
+                    return err;
+                });
+        },
+
+        getList: function(){
+            return Promise.resolve('hello');
         }
 
     };

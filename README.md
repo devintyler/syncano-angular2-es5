@@ -21,3 +21,5 @@ Current Docs:
 [Ionic Blog](http://blog.ionic.io/angular-2-series-components/)
 
 [EventEmitters](http://stackoverflow.com/questions/32295635/change-detection-in-angular-2-0)
+
+[Good Angular 2.0 Examples](http://www.syntaxsuccess.com/viewarticle/angular-2.0-examples)
